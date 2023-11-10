@@ -19,8 +19,8 @@ class BaseModel:
                 else:
                     setattr(self, key, value)
         else:
-            self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
+            self.id = str(uuid.uuid4())
             self.updated_at = datetime.now()
 
     def save(self):
@@ -33,13 +33,20 @@ class BaseModel:
 
         class_name = self.__class__.__name__
         iso_format = "%Y-%m-%dT%H:%M:%S.%f"
+        public_attributes = ["id", "created_at", "updated_at"]
+        custom_dict = {}
+        reversed_dict = dict(reversed(self.__dict__.items()))
+
+        for key, value in reversed_dict.items():
+            if key not in public_attributes:
+                custom_dict[key] = value
 
         custom_dict = {
-            **self.__dict__,
+            **custom_dict,
             "__class__": class_name,
+            "updated_at": self.updated_at.strftime(iso_format),
             "id": self.id,
             "created_at": self.created_at.strftime(iso_format),
-            "updated_at": self.updated_at.strftime(iso_format),
         }
 
         return custom_dict
@@ -48,4 +55,5 @@ class BaseModel:
         """Returns a string representation of the BaseModel instance"""
 
         class_name = self.__class__.__name__
-        return f"[{class_name}] ({self.id}) {self.__dict__}"
+        reversed_dict = dict(reversed(self.__dict__.items()))
+        return f"[{class_name}] ({self.id}) {reversed_dict}"
