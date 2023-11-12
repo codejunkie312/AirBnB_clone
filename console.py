@@ -94,7 +94,7 @@ class HBNBCommand(cmd.Cmd):
         elif args[0] not in HBNBCommand.classes.keys():
             print("** class doesn't exist **")
         else:
-            print([str(obj) for obj in all_objs.values()])
+            print([str(obj) for obj in all_objs.values() if args[0] in obj.__class__.__name__])
 
     def do_update(self, arg):
         """Updates an instance based on the class name and id
@@ -120,6 +120,38 @@ class HBNBCommand(cmd.Cmd):
                     storage.save()
             else:
                 print("** no instance found **")
+    
+    def default(self, arg):
+        """Method called on an input line when the command prefix is not
+        recognized. It parses arg as a command name and a string containing a
+        list of arguments. It then looks for a method named 'do_' + command,
+        dispatching to that method if it exists. If it doesn't, it raises an
+        error."""
+        args = arg.split(".")
+        if len(args) == 2:
+            if args[1] == "all()":
+                self.do_all(args[0])
+            elif args[1] == "count()":
+                all_objs = storage.all()
+                count = 0
+                for key in all_objs:
+                    if key.split(".")[0] == args[0]:
+                        count += 1
+                print(count)
+            elif args[1][:5] == "show(" and args[1][-1] == ")":
+                self.do_show(args[0] + " " + args[1][5:-1])
+            elif args[1][:8] == "destroy(" and args[1][-1] == ")":
+                self.do_destroy(args[0] + " " + args[1][8:-1])
+            elif args[1][:7] == "update(" and args[1][-1] == ")":
+                args1 = args[1][7:-1].split(", ")
+                if len(args1) == 0:
+                    self.do_update(args[0])
+                elif len(args1) == 1:
+                    self.do_update(args[0] + " " + args1[0])
+                elif len(args1) == 2:
+                    self.do_update(args[0] + " " + args1[0] + " " + args1[1])
+                elif len(args1) == 3:
+                    self.do_update(args[0] + " " + args1[0] + " " + args1[1] + " " + args1[2])
 
 
 if __name__ == '__main__':
