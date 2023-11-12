@@ -94,7 +94,8 @@ class HBNBCommand(cmd.Cmd):
         elif args[0] not in HBNBCommand.classes.keys():
             print("** class doesn't exist **")
         else:
-            print([str(obj) for obj in all_objs.values() if args[0] in obj.__class__.__name__])
+            print([str(obj) for obj in all_objs.values()
+                   if args[0] in obj.__class__.__name__])
 
     def do_update(self, arg):
         """Updates an instance based on the class name and id
@@ -120,7 +121,7 @@ class HBNBCommand(cmd.Cmd):
                     storage.save()
             else:
                 print("** no instance found **")
-    
+
     def default(self, arg):
         """Method called on an input line when the command prefix is not
         recognized. It parses arg as a command name and a string containing a
@@ -151,7 +152,8 @@ class HBNBCommand(cmd.Cmd):
                 elif len(args1) == 2:
                     self.do_update(args[0] + " " + args1[0] + " " + args1[1])
                 elif len(args1) == 3:
-                    self.do_update(args[0] + " " + args1[0] + " " + args1[1] + " " + args1[2])
+                    self.do_update(args[0] + " " + args1[0] + " " +
+                                   args1[1] + " " + args1[2])
 
 
 if __name__ == '__main__':
