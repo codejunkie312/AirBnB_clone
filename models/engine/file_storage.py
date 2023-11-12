@@ -33,11 +33,14 @@ class FileStorage:
         from models.base_model import BaseModel
         from models.user import User
 
+        class_dict = {
+            "BaseModel": BaseModel,
+            "User": User
+        }
+
         if os.path.isfile(FileStorage.__file_path):
             with open(FileStorage.__file_path, 'r') as f:
                 json_dict = json.load(f)
                 for key, value in json_dict.items():
-                    if value['__class__'] == 'BaseModel':
-                        FileStorage.__objects[key] = BaseModel(**value)
-                    elif value['__class__'] == 'User':
-                        FileStorage.__objects[key] = User(**value)
+                    FileStorage.__objects[key] = \
+                        class_dict[value["__class__"]](**value)
