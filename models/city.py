@@ -4,10 +4,10 @@ from models.base_model import BaseModel
 
 
 class City(BaseModel):
-    """Represents a City"""
+    """Represents a city"""
 
     def __init__(*args, **kwargs):
-        """Initializes a new State instance"""
+        """Initializes a new City instance"""
         super().__init__(*args, **kwargs)
         self.state_id = ""
         self.name = ""
