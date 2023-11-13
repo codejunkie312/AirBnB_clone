@@ -115,6 +115,10 @@ class HBNBCommand(cmd.Cmd):
                 if len(args) == 2:
                     print("** attribute name missing **")
                 elif len(args) == 3:
+                    if type(args[2]) is dict:
+                        for key, value in args[2].items():
+                            setattr(all_objs[key], key, value)
+                        storage.save()
                     print("** value missing **")
                 else:
                     setattr(all_objs[key], args[2], args[3])

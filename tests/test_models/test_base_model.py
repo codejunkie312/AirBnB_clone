@@ -24,14 +24,14 @@ class TestBaseModel_instantiation(unittest.TestCase):
         self.assertTrue(hasattr(self.model, 'updated_at'))
         self.assertEqual(type(self.model.id), str)
         self.assertEqual(type(self.model.created_at), datetime)
-	self.assertEqual(type(self.model.updated_at), datetime)
+        self.assertEqual(type(self.model.updated_at), datetime)
 
     def test_unique_id(self):
         b = BaseModel()
         self.assertNotEqual(self.model.id, b.id)
 
     def test_id_type(self):
-        self.assertNotEqual(type(self.model.id), UUID)
+        self.assertNotEqual(type(self.model.id), uuid.UUID)
 
 
 if __name__ == '__main__':
