@@ -32,3 +32,7 @@ class TestBaseModel_instantiation(unittest.TestCase):
 
     def test_id_type(self):
         self.assertNotEqual(type(self.model.id), UUID)
+
+
+if __name__ == '__main__':
+    unittest.main()
