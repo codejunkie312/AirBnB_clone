@@ -140,7 +140,7 @@ class HBNBCommand(cmd.Cmd):
         list of arguments. It then looks for a method named 'do_' + command,
         dispatching to that method if it exists. If it doesn't, it raises an
         error."""
-        args = arg.split(".")
+        args = arg.split(".", 1)
         if len(args) == 2:
             if args[1] == "all()":
                 self.do_all(args[0])
