@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 """This module contains the code for the console implementation."""
 import cmd
+import shlex
+import json
 from models.base_model import BaseModel
 from models.user import User
 from models.state import State
@@ -102,6 +104,10 @@ class HBNBCommand(cmd.Cmd):
         by adding or updating attribute (save the change into the
         JSON file)."""
         args = arg.split()
+        if args[2][0] == '{' and args[-1][-1] == '}':
+            dict_str = " ".join(args[2:])
+            args[2] = dict_str
+            args = args[:3]
         if len(args) == 0:
             print("** class name missing **")
         elif args[0] not in HBNBCommand.classes.keys():
@@ -115,11 +121,13 @@ class HBNBCommand(cmd.Cmd):
                 if len(args) == 2:
                     print("** attribute name missing **")
                 elif len(args) == 3:
-                    if type(args[2]) is dict:
-                        for key, value in args[2].items():
-                            setattr(all_objs[key], key, value)
+                    if args[2].startswith('{') and args[2].endswith('}'):
+                        attr_dict = json.loads(args[2])
+                        for k, v in attr_dict.items():
+                            setattr(all_objs[key], k, v)
                         storage.save()
-                    print("** value missing **")
+                    else:
+                        print("** value missing **")
                 else:
                     setattr(all_objs[key], args[2], args[3])
                     storage.save()
