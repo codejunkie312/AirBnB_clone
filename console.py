@@ -157,6 +157,10 @@ class HBNBCommand(cmd.Cmd):
                 self.do_destroy(args[0] + " " + args[1][8:-1])
             elif args[1][:7] == "update(" and args[1][-1] == ")":
                 args1 = args[1][7:-1].split(", ")
+                if args1[1][0] == '{' and args1[-1][-1] == '}':
+                    dict_str = ", ".join(args1[1:])
+                    args1[1] = dict_str
+                    args1 = args1[:2]
                 if len(args1) == 0:
                     self.do_update(args[0])
                 elif len(args1) == 1:
