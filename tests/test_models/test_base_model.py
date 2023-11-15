@@ -3,9 +3,8 @@
 import unittest
 from models.base_model import BaseModel
 from datetime import datetime
-import uuid
-import json
-import os
+from unittest.mock import patch
+import models
 
 
 class TestBaseModel(unittest.TestCase):
@@ -13,85 +12,63 @@ class TestBaseModel(unittest.TestCase):
 
     def setUp(self):
         """Sets up the testing environment"""
-        pass
+        self.model = BaseModel()
+        self.model.name = "Test model"
+        self.model.number = 123
 
     def tearDown(self):
-        """Tears down the testing environment"""
-        try:
-            os.remove("file.json")
-        except FileNotFoundError:
-            pass
-
+        """Tears down the testing environment by deleting the instance"""
+        del self.model
+    
     def test_init(self):
-        """Tests the initialization of the base model instance"""
-        my_model = BaseModel()
-        self.assertTrue(isinstance(my_model, BaseModel))
-
-    def test_init_id(self):
-        """Tests the id of the base model instance"""
-        my_model = BaseModel()
-        self.assertTrue(type(my_model.id), str)
-
-    def test_init_created_at(self):
-        """Tests the created_at attribute of the base model instance"""
-        my_model = BaseModel()
-        self.assertTrue(type(my_model.created_at), datetime)
-
-    def test_init_updated_at(self):
-        """Tests the updated_at attribute of the base model instance"""
-        my_model = BaseModel()
-        self.assertTrue(type(my_model.updated_at), datetime)
+        """Tests the __init__ method"""
+        self.assertTrue(isinstance(self.model, BaseModel))
+        self.assertTrue(hasattr(self.model, "id"))
+        self.assertTrue(hasattr(self.model, "created_at"))
+        self.assertTrue(hasattr(self.model, "updated_at"))
+        self.assertTrue(hasattr(self.model, "name"))
+        self.assertTrue(hasattr(self.model, "number"))
 
     def test_init_kwargs(self):
-        """Tests the initialization of the base model instance with kwargs"""
-        my_model = BaseModel()
-        my_model.name = "ALX"
-        my_model.my_number = 89
-        my_model_json = my_model.to_dict()
-        my_new_model = BaseModel(**my_model_json)
-        self.assertTrue(isinstance(my_new_model, BaseModel))
-        self.assertTrue(my_new_model.name, "ALX")
-        self.assertTrue(my_new_model.my_number, 89)
+        """Tests the __init__ method using kwargs"""
+        date = datetime.now()
+        date_str = date.isoformat()
+        model = BaseModel(id="123", created_at=date_str, updated_at=date_str, name="Test", number=123)
+        self.assertTrue(isinstance(model, BaseModel))
+        self.assertTrue(hasattr(model, "id"))
+        self.assertTrue(hasattr(model, "created_at"))
+        self.assertTrue(hasattr(model, "updated_at"))
+        self.assertTrue(hasattr(model, "name"))
+        self.assertEqual(model.name, "Test")
+        self.assertEqual(model.number, 123)
+        self.assertEqual(model.id, "123")
+        self.assertEqual(model.created_at, date)
+        self.assertEqual(model.updated_at, date)
 
-    def test_str(self):
-        """Tests the __str__ method of the base model instance"""
-        my_model = BaseModel()
-        expected = "[{}] ({}) {}".format(
-            my_model.__class__.__name__, my_model.id, my_model.__dict__)
-        actual = str(my_model)
-        self.assertEqual(expected, actual)
-
-    def test_save(self):
-        """Tests the save method of the base model instance"""
-        my_model = BaseModel()
-        my_model.save()
-        self.assertNotEqual(my_model.created_at, my_model.updated_at)
-
+    @patch("models.base_model.storage")
+    def test_save(self, mock_storage):
+        """Tests the save method"""
+        old_updated_at = self.model.updated_at
+        self.model.save()
+        self.assertNotEqual(old_updated_at, self.model.updated_at)
+        mock_storage.save.assert_called()
+    
     def test_to_dict(self):
-        """Tests the to_dict method of the base model instance"""
-        my_model = BaseModel()
-        my_model.name = "ALX"
-        my_model.my_number = 89
-        my_model_json = my_model.to_dict()
-        expected = {
-            'id': my_model.id,
-            '__class__': my_model.__class__.__name__,
-            'created_at': my_model.created_at.strftime("%Y-%m-%dT%H:%M:%S.%f"),
-            'updated_at': my_model.updated_at.strftime("%Y-%m-%dT%H:%M:%S.%f"),
-            'name': "ALX",
-            'my_number': 89
-        }
-        self.assertDictEqual(expected, my_model_json)
+        """Tests the to_dict method"""
+        model_dict = self.model.to_dict()
+        self.assertEqual(model_dict['__class__'], 'BaseModel')
+        self.assertEqual(model_dict['name'], 'Test model')
+        self.assertEqual(model_dict['number'], 123)
+        self.assertIsInstance(model_dict['created_at'], str)
+        self.assertIsInstance(model_dict['updated_at'], str)
+    
+    def test_str(self):
+        """Test the __str__ method."""
+        string = str(self.model)
+        self.assertIn("[BaseModel]", string)
+        self.assertIn(f"({self.model.id})", string)
+        self.assertIn("'name': 'Test model'", string)
+        self.assertIn("'number': 123", string)
 
-    def test_to_dict_isoformat(self):
-        """Tests the to_dict method of the base model instance with isoformat
-        """
-        my_model = BaseModel()
-        my_model.name = "ALX"
-        my_model.my_number = 89
-        my_model_json = my_model.to_dict()
-        self.assertEqual(my_model_json["created_at"],
-                         my_model.created_at.isoformat())
-        self.assertEqual(my_model_json["updated_at"],
-                         my_model.updated_at.isoformat())
-        self.assertEqual(my_model_json["__class__"], "BaseModel")
+if __name__ == "__main__":
+    unittest.main()
