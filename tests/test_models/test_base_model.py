@@ -3,8 +3,7 @@
 import unittest
 from models.base_model import BaseModel
 from datetime import datetime
-from unittest.mock import patch
-import models
+from os import path
 
 
 class TestBaseModel(unittest.TestCase):
@@ -45,13 +44,14 @@ class TestBaseModel(unittest.TestCase):
         self.assertEqual(model.created_at, date)
         self.assertEqual(model.updated_at, date)
 
-    @patch("models.base_model.storage")
-    def test_save(self, mock_storage):
+    def test_save(self):
         """Tests the save method"""
         old_updated_at = self.model.updated_at
         self.model.save()
         self.assertNotEqual(old_updated_at, self.model.updated_at)
-        mock_storage.save.assert_called()
+        self.assertTrue(isinstance(self.model.updated_at, datetime))
+        self.assertTrue(path.isfile("file.json"))
+        
     
     def test_to_dict(self):
         """Tests the to_dict method"""
