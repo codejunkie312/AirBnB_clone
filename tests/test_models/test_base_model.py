@@ -4,6 +4,8 @@ import unittest
 from models.base_model import BaseModel
 from datetime import datetime
 from os import path
+from models.engine.file_storage import FileStorage
+import json
 
 
 class TestBaseModel(unittest.TestCase):
@@ -48,9 +50,14 @@ class TestBaseModel(unittest.TestCase):
         """Tests the save method"""
         old_updated_at = self.model.updated_at
         self.model.save()
+        with open(FileStorage._FileStorage__file_path, "r") as f:
+            json_dict = json.load(f)
+        key = self.model.__class__.__name__ + "." + self.model.id
+        self.assertTrue(key in json_dict)
+        self.assertEqual(json_dict[key], self.model.to_dict())
         self.assertNotEqual(old_updated_at, self.model.updated_at)
         self.assertTrue(isinstance(self.model.updated_at, datetime))
-        self.assertTrue(path.isfile("file.json"))
+        self.assertTrue(path.isfile(FileStorage._FileStorage__file_path))
         
     
     def test_to_dict(self):
