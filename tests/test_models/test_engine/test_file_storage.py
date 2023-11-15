@@ -4,6 +4,7 @@ import unittest
 import os
 from models.engine.file_storage import FileStorage
 from models.base_model import BaseModel
+import json
 
 
 class TestFileStorage(unittest.TestCase):
@@ -28,7 +29,6 @@ class TestFileStorage(unittest.TestCase):
     def test_init(self):
         """Test if the instnace FileStorage is correctly created"""
         self.assertIsInstance(self.storage, FileStorage)
-        self.assertIsInstance(self.model, BaseModel)
         self.assertIsInstance(self.storage._FileStorage__objects, dict)
         self.assertIsInstance(self.storage._FileStorage__file_path, str)
         self.assertTrue(hasattr(self.storage, "_FileStorage__objects"))
@@ -43,12 +43,18 @@ class TestFileStorage(unittest.TestCase):
         self.storage.new(self.model)
         key = self.model.__class__.__name__ + "." + self.model.id
         self.assertIn(key, FileStorage._FileStorage__objects)
+        self.assertEqual(FileStorage._FileStorage__objects[key], self.model)
 
     def test_save(self):
         """Test that save serializes __objects to the JSON file (path: __file_path)"""
         self.storage.new(self.model)
         self.storage.save()
         self.assertTrue(os.path.isfile(FileStorage._FileStorage__file_path))
+        with open(FileStorage._FileStorage__file_path, 'r') as f:
+            json_dict = json.load(f)
+        key = self.model.__class__.__name__ + "." + self.model.id
+        self.assertIn(key, json_dict)
+        self.assertEqual(json_dict[key], self.model.to_dict())
     
     def test_reload(self):
         """Test that reload deserializes the JSON file to __objects (only if the
@@ -59,6 +65,7 @@ class TestFileStorage(unittest.TestCase):
         self.storage.reload()
         key = self.model.__class__.__name__ + "." + self.model.id
         self.assertIn(key, FileStorage._FileStorage__objects)
+        self.assertEqual(FileStorage._FileStorage__objects[key], self.model)
     
     def test_reload_no_file(self):
         """Test that reload does not raise an exception if the JSON file does not
