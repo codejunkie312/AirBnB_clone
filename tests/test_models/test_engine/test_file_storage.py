@@ -24,6 +24,15 @@ class TestFileStorage(unittest.TestCase):
             os.remove("file.json")
         if os.path.isfile("file.json.temp"):
             os.rename("file.json.temp", "file.json")
+        
+    def test_instances(self):
+        """Test if the instnace FileStorage is correctly created"""
+        self.assertIsInstance(self.storage, FileStorage)
+        self.assertIsInstance(self.model, BaseModel)
+        self.assertIsInstance(self.storage._FileStorage__objects, dict)
+        self.assertIsInstance(self.storage._FileStorage__file_path, str)
+        self.assertTrue(hasattr(self.storage, "_FileStorage__objects"))
+        self.assertTrue(hasattr(self.storage, "_FileStorage__file_path"))
 
     def test_all(self):
         """Test that all return the __objects dictionary"""
