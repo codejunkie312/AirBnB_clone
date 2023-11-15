@@ -20,6 +20,10 @@ class TestUser(unittest.TestCase):
     def test_init(self):
         """Test the __init__ method."""
         self.assertTrue(isinstance(self.user, User))
+        self.assertTrue(User.email, "")
+        self.assertTrue(User.password, "")
+        self.assertTrue(User.first_name, "")
+        self.assertTrue(User.last_name, "")
         self.assertEqual(self.user.email, "test@example.com")
         self.assertEqual(self.user.password, "password")
         self.assertEqual(self.user.first_name, "Code")
