@@ -2,14 +2,8 @@
 """This module containt the unittests for the FileStorage class"""
 import unittest
 import os
-import json
 from models.engine.file_storage import FileStorage
 from models.base_model import BaseModel
-from models.user import User
-from models.state import State
-from models.city import City
-from models.place import Place
-from models.amenity import Amenity
 
 
 class TestFileStorage(unittest.TestCase):
@@ -122,3 +116,6 @@ class TestFileStorage(unittest.TestCase):
         except:
             pass
         self.assertEqual(self.storage.all(), FileStorage._FileStorage__objects)
+
+if __name__ == "__main__":
+    unittest.main()
