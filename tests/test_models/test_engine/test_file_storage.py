@@ -25,7 +25,7 @@ class TestFileStorage(unittest.TestCase):
         if os.path.isfile("file.json.temp"):
             os.rename("file.json.temp", "file.json")
         
-    def test_instances(self):
+    def test_init(self):
         """Test if the instnace FileStorage is correctly created"""
         self.assertIsInstance(self.storage, FileStorage)
         self.assertIsInstance(self.model, BaseModel)
