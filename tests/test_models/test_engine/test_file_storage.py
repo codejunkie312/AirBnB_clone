@@ -62,7 +62,7 @@ class TestFileStorage(unittest.TestCase):
         exist, no exception should be raised)"""
         self.storage.new(self.model)
         self.storage.save()
-        FileStorage.reload(self)
+        self.storage.reload()
         key = self.model.__class__.__name__ + "." + self.model.id
         self.assertIn(key, FileStorage._FileStorage__objects)
     

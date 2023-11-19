@@ -104,10 +104,6 @@ class HBNBCommand(cmd.Cmd):
         by adding or updating attribute (save the change into the
         JSON file)."""
         args = arg.split()
-        if args[2][0] == '{' and args[-1][-1] == '}':
-            dict_str = " ".join(args[2:])
-            args[2] = dict_str
-            args = args[:3]
         if len(args) == 0:
             print("** class name missing **")
         elif args[0] not in HBNBCommand.classes.keys():
