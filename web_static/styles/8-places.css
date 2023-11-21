@@ -15,7 +15,6 @@
     margin-right: auto;
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
     justify-content: center;
     flex: 0 1 25%;
 }
@@ -36,6 +35,8 @@
 .listing-header {
     display: inline-block;
     width: 100%;
+    margin-bottom: auto;
+    margin-top: auto;
 }
 
 .places .information {
@@ -102,5 +103,12 @@
 }
 
 .user {
+    text-align: left;
+    width: 100%;
+}
 
+.description {
+    margin-bottom: 20px;
+    text-align: left;
+    width: 100%;
 }
