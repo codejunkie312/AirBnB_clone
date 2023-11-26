@@ -114,3 +114,70 @@
     text-align: left;
     width: 100%;
 }
+
+article .amenities {
+    margin-top: 40px;
+    width: 100%;
+}
+
+article .amenities li {
+    list-style: none;
+    text-align: left;
+    width: 100%;
+    margin-bottom: 20px;
+    background-size: contain;
+    background-origin: content-box;
+    text-indent: 20px;
+}
+
+article .amenities ul {
+    display: flex;
+    flex-direction: column;
+}
+
+.animal {
+    background: url('../images/icon_pets.png') no-repeat;
+}
+
+.internet {
+    background: url('../images/icon_wifi.png') no-repeat;
+}
+
+.tv {
+    background: url('../images/icon_tv.png') no-repeat;
+}
+
+article .amenities h2 {
+    font-size: 16px;
+    border-bottom: #DDDDDD 1px solid;
+    text-align: left;
+}
+
+.reviews {
+    margin-top: 40px;
+    width: 100%;
+}
+
+.reviews h2 {
+    font-size: 16px;
+    border-bottom: #DDDDDD 1px solid;
+    text-align: left;
+}
+
+.reviews h3 {
+    font-size: 14px;
+    text-align: left;
+    margin: 0;
+}
+
+.reviews p {
+    font-size: 12px;
+    text-align: left;
+    margin: 0;
+}
+
+.reviews li {
+    list-style: none;
+    margin-bottom: 20px;
+    width: 100%;
+}
